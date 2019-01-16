@@ -3,10 +3,11 @@ package facemywrath.rpglite.storage;
 import java.util.HashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 
-import facemywrath.rpglite.professions.Profession;
+import facemywrath.rpglite.professions.abstraction.Profession;
 
 public class User {
 
@@ -47,6 +48,11 @@ public class User {
 		if(!professions.containsKey(profession))
 			professions.put(profession, 0);
 		professions.put(profession, professions.get(profession)+1);
+	}
+
+	public void promote(Profession profession) {
+		professions.put(profession, professions.get(profession)+1);
+		Bukkit.broadcastMessage("Mining level " + professions.get(profession));
 	}
 	
 }

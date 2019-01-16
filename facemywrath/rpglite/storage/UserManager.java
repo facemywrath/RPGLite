@@ -30,7 +30,7 @@ public class UserManager {
 
 	public User getUser(UUID uuid) {
 		if(!users.containsKey(uuid))
-			if(Bukkit.getOfflinePlayer(uuid).hasPlayedBefore())generateUser(uuid);
+			if(Bukkit.getOfflinePlayer(uuid).hasPlayedBefore() || Bukkit.getOfflinePlayer(uuid).isOnline())generateUser(uuid);
 			else return null;
 		return users.get(uuid);
 	}

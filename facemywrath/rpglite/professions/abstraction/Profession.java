@@ -1,13 +1,16 @@
-package facemywrath.rpglite.professions;
+package facemywrath.rpglite.professions.abstraction;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 
 import facemywrath.rpglite.main.Main;
+import facemywrath.rpglite.professions.Mining;
 import facemywrath.rpglite.storage.User;
 
 public interface Profession {
@@ -18,6 +21,14 @@ public interface Profession {
 		return Arrays.asList(MINING);
 	}
 	
+	public static List<CraftingProfession> getCrafting() {
+		return new ArrayList<>();
+	}
+
+	public static List<GatheringProfession> getGathering() {
+		return Arrays.asList((GatheringProfession)MINING);
+	}
+	
 	public static Profession getByName(String str) {
 		switch(str.toLowerCase()) {
 		case "mining":
@@ -26,7 +37,7 @@ public interface Profession {
 		return null;
 	}
 	
-	public void event(Main main);
+	public void init(Main main);
 	
 	public default void increment(User user, int amount){
 		user.increment(this, amount);
@@ -36,7 +47,20 @@ public interface Profession {
 	
 	public String getName();
 	
-	public default MaterialData parseString(String key) {
+	public int getSkillGap();
+	
+	public default ChatColor getDifferenceColor(User user, int blockreq) {
+		int gap = getSkillGap()+blockreq;
+		int level = user.getLevel(this);
+		if(level < blockreq) return ChatColor.RED;
+		if(level >= gap) return ChatColor.GRAY;
+		if(level <= gap/3.0) return ChatColor.GOLD;
+		if(level <= gap/3.0*2.0) return ChatColor.YELLOW;
+		if(level < gap) return ChatColor.GREEN;
+		return ChatColor.RED;
+	}
+	
+	public default MaterialData parseMaterialData(String key) {
 		Material material = null;
 		byte data = -1;
 		if(key.contains(":"))
